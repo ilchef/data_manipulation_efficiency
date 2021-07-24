@@ -2,3 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# dont upload rds
+*.rds
