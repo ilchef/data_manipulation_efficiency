@@ -1,0 +1,71 @@
+---
+title: "01_data_preparation"
+author: "Tom Ilchef"
+date: "24/07/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Step 1: Set up environment
+```{r, message=FALSE}
+#python
+library(reticulate)
+use_python("C:/Program Files/WindowsApps/PythonSoftwareFoundation.Python.3.9_3.9.1776.0_x64__qbz5n2kfra8p0")
+
+
+#dplyr, dtplyr
+library(dplyr)
+library(dtplyr)
+
+#datatable
+library(data.table)
+
+
+#other required
+library(stringr)
+library(ggplot2)
+library(plotly)
+```
+
+## Step 2: Prepare testing data
+```{r}
+
+temp <- tempfile()
+testing <- download.file("https://data.sa.gov.au/data/dataset/3ba1c4dd-e52f-4c28-858a-21284c3ee458/resource/c78fc6da-baa4-47cc-b4df-a97f452bbf9a/download/ken01_p.zip",temp)
+
+filenames<-unzip(temp,list=TRUE)[,1]
+
+#only want csvs
+filenames<-filenames[str_detect(filenames,".csv")] 
+
+dfs = vector("list", 1000) #unknown size, dont want to grow list in loop.
+
+for (i in 1:length(filenames)){
+  conn<-unz(temp, filenames[i])
+  
+  #name files in loop
+  filename <- sprintf("df_%s",filenames[i] %>% 
+                              str_replace("KEN01_p/KEN01p_1hr","") %>%
+                              str_replace(".csv",""))
+  
+   #  list of filenames
+  dfs[[i]] <- read.csv(conn)
+}
+
+
+master_df <-  rbindlist(dfs,fill=TRUE)
+rm(dfs)
+unlink(temp)
+
+```
+#drop everything else
+#rm(list=setdiff(ls(), "master_df"))
+
+
+```{python}
+$ conda update -n base -c defaults conda
+```
