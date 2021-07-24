@@ -29,39 +29,23 @@ library(data.table)
 library(stringr)
 library(ggplot2)
 library(plotly)
+
+#benchmarking
 ```
 
-## Step 2: Prepare testing data
+## Step 2: load data 
 ```{r}
+fulldf <- readRDS("r/air_quality_sa.rds") 
 
-temp <- tempfile()
-testing <- download.file("https://data.sa.gov.au/data/dataset/3ba1c4dd-e52f-4c28-858a-21284c3ee458/resource/c78fc6da-baa4-47cc-b4df-a97f452bbf9a/download/ken01_p.zip",temp)
+# to avoid having to partition data, store redundant info, adding uniformly distributed random number
+set.seed(2021)
+randoms <- runif(nrow(fulldf))
 
-filenames<-unzip(temp,list=TRUE)[,1]
 
-#only want csvs
-filenames<-filenames[str_detect(filenames,".csv")] 
+fulldf <- fulldf %>%
+        cbind(randoms)
 
-dfs = vector("list", 1000) #unknown size, dont want to grow list in loop.
-
-for (i in 1:length(filenames)){
-  conn<-unz(temp, filenames[i])
-  
-   #  add data to list
-  dfs[[i]] <- read.csv(conn)
-}
-
-# create df from all dfs in list
-master_df <-  rbindlist(dfs,fill=TRUE)
-rm(dfs)
-unlink(temp)
-
-```
-
-## Step 3: Save data 
-```{r}
-saveRDS(master_df,"r/air_quality_sa.rds")
-rm(list=ls())
+rm(randoms)
 ```
 
 ```{python}

@@ -18,17 +18,11 @@ use_python("C:/Program Files/WindowsApps/PythonSoftwareFoundation.Python.3.9_3.9
 
 
 #dplyr, dtplyr
-library(dplyr)
-library(dtplyr)
 
 #datatable
 library(data.table)
 
 
-#other required
-library(stringr)
-library(ggplot2)
-library(plotly)
 ```
 
 ## Step 2: Prepare testing data
@@ -60,10 +54,19 @@ unlink(temp)
 
 ## Step 3: Save data 
 ```{r}
+
+
+master_df[,Date.Time := as.POSIXct(Date.Time,format="%d/%m/%Y %H:%M")]
+
+
+master_df[,date := as.Date(Date.Time,format="%d/%m/%Y")]
+master_df[,time := format(Date.Time,format="%H:%M")]
+
+
+<- master_df  %>%
+        mutate(date = as.Date(Date.Time)
+                ,time = format(Date.Time,format="%H:%M"))
+        
 saveRDS(master_df,"r/air_quality_sa.rds")
 rm(list=ls())
-```
-
-```{python}
-$ conda update -n base -c defaults conda
 ```
