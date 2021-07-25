@@ -59,14 +59,11 @@ unlink(temp)
 master_df[,Date.Time := as.POSIXct(Date.Time,format="%d/%m/%Y %H:%M")]
 
 
-master_df[,date := as.Date(Date.Time,format="%d/%m/%Y")]
+master_df[,date := format(Date.Time,format="%d/%m/%Y")]
 master_df[,time := format(Date.Time,format="%H:%M")]
 
 
-<- master_df  %>%
-        mutate(date = as.Date(Date.Time)
-                ,time = format(Date.Time,format="%H:%M"))
         
-saveRDS(master_df,"r/air_quality_sa.rds")
+saveRDS(master_df,"data/air_quality_sa.rds")
 rm(list=ls())
 ```

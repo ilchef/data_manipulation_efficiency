@@ -35,7 +35,7 @@ library(plotly)
 
 ## Step 2: load data 
 ```{r}
-fulldf <- readRDS("r/air_quality_sa.rds") 
+fulldf <- readRDS("data/air_quality_sa.rds") 
 
 # to avoid having to partition data, store redundant info, adding uniformly distributed random number
 set.seed(2021)
